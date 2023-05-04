@@ -12,6 +12,7 @@ const port = process.env.PORT;
 
 // configurando as rotas
 const routesDeputados = require('../src/routes/deputados');
+const routeProposicoes = require('../src/routes/proposicoes');
 
 // conectando
 const app = express();
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(bodyparser.json());
 
 app.use(routesDeputados);
+app.use(routeProposicoes);
 
 db();
 
