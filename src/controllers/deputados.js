@@ -4,11 +4,16 @@ const axios = require('axios');
 const getDeputados = async(req, res, next) => {
   try{
 
-    const result = await axios.get(`${process.env.API_URL}/deputados?ordem=ASC&ordenarPor=nome`);
+    if(!await Deputados.findOne({})){
+      const result = await axios.get(`${process.env.API_URL}/deputados?dataInicio=2018-01-01&dataFim=2022-12-31&ordem=ASC&ordenarPor=nome`);
     
-    await Deputados.create(result.data.dados);
+      await Deputados.create(result.data.dados);
 
-    return res.json(result.data.dados);
+      return res.status(200).json(result.data.dados);
+    }
+    return res.status(200).send('Já existe documentos no banco de dados');
+
+    
   }catch(err){
     console.error(err);
     next()
