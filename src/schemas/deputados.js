@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const DeputadosSchema = mongoose.Schema({
-  id: { type: Number, required: true },
+  id: { type: Number, required: true, unique: true },
   nome: { type: String, required: true },
   siglaPartido: { type: String, required: true },
   siglaUf: { type: String, required: true },

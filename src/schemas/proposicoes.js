@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const ProposicoesSchema = mongoose.Schema({
-    id: { type: Number, required: true},
+    id: { type: Number, required: true, unique: true},
     uri: { type: String},
     siglaTipo: { type: String, required: true},
     codTipo: { type: Number, required: true},
