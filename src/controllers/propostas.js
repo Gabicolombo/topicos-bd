@@ -3,7 +3,7 @@ const axios = require('axios');
 
 const getPropostas = async(req, res, next) => {
     try{
-        let pagina = 1266;
+        let pagina = 1812;
         let dados = ['']
         while(dados.length > 0) {
 
