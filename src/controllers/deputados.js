@@ -5,7 +5,7 @@ const getDeputados = async(req, res, next) => {
   try{
 
     if(!await Deputados.findOne({})){
-      const result = await axios.get(`${process.env.API_URL}/deputados?dataInicio=2018-01-01&dataFim=2022-12-31&ordem=ASC&ordenarPor=nome`);
+      const result = await axios.get(`${process.env.API_URL}/deputados?idLegislatura=56&ordem=ASC&ordenarPor=nome`);
     
       await Deputados.create(result.data.dados);
 
