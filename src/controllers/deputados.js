@@ -20,4 +20,18 @@ const getDeputados = async(req, res, next) => {
   }
 }
 
-module.exports = getDeputados;
+const getListaDeputados = async(req, res, next) => {
+  try {
+    const result = await Deputados.find().skip((req.params.page-1)*req.params.quantity).limit(req.params.quantity);
+    return res.status(200).send(result);
+  }
+  catch(err) {
+    console.error(err);
+    next();
+  }
+}
+
+module.exports = {
+  getDeputados,
+  getListaDeputados
+};
