@@ -37,4 +37,64 @@ const getDespesasCamara = async(req, res, next) => {
     }
 }
 
-module.exports = getDespesasCamara;
+const getDespesasPorEstado = async(req, res, next) => {
+    try {
+        result = await Despesas.aggregate([
+            {
+                $lookup: {
+                    from: 'deputados',
+                    localField: 'idDeputado',
+                    foreignField: 'id',
+                    as: 'deputados'
+                }
+            },
+            {
+                $unwind: '$deputados'
+            },
+            {
+                $group: {
+                    _id: '$deputados.siglaUf',
+                    total: { $sum: '$valorLiquido'}
+                }
+            }
+            ]);
+
+            return res.status(200).send(result);
+    }
+    catch(err) {
+        console.error(err);
+        next();
+    }
+}
+
+const getDespesasPorPartido = async(req, res, next) => {
+    try {
+        result = await Despesas.aggregate([
+            {
+                $lookup: {
+                    from: 'deputados',
+                    localField: 'idDeputado',
+                    foreignField: 'id',
+                    as: 'deputados'
+                }
+            },
+            {
+                $unwind: '$deputados'
+            },
+            {
+                $group: {
+                    _id: '$deputados.siglaPartido',
+                    total: { $sum: '$valorLiquido'}
+                }
+            }
+            ]);
+
+            return res.status(200).send(result);
+    }
+    catch(err) {
+        console.error(err);
+        next();
+    }
+}
+
+module.exports = { getDespesasCamara, getDespesasPorEstado, getDespesasPorPartido };

@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const getDespesasCamara = require('../controllers/despesas');
+const controller = require('../controllers/despesas');
 
-router.get('/getDespesasCamara', getDespesasCamara);
+router.get('/getDespesasCamara', controller.getDespesasCamara);
+router.get('/getDespesasPorEstado', controller.getDespesasPorEstado);
+router.get('/getDespesasPorPartido', controller.getDespesasPorPartido);
 
 module.exports = router;
