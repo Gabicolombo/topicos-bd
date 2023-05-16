@@ -31,7 +31,25 @@ const getListaDeputados = async(req, res, next) => {
   }
 }
 
+const getDeputado = async(req, res, next) => {
+  try{
+   
+    const id = req.params.id;
+   
+    const result = await Deputados.find({id: id});
+  
+    if(result.length == 0) return res.status(404).json({message: 'Não foi encontrado esse deputado'});
+
+    return res.status(200).json(result);
+
+  }catch(err){
+    console.error(err);
+    next();
+  }
+}
+
 module.exports = {
   getDeputados,
-  getListaDeputados
+  getListaDeputados,
+  getDeputado
 };

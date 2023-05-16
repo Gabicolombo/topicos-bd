@@ -5,6 +5,7 @@ const controller = require('../controllers/propostas');
 const router = express.Router();
 
 router.get('/getAutor', controller.getPropostas);
+router.get('/getPropostas?', controller.propostas);
 
 module.exports = router;
 
