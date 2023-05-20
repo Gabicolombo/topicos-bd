@@ -59,6 +59,55 @@ const getPropostas = async (req, res, next) => {
     }
 }
 
+const propostas = async (req, res, next) => {
+    try {
+        const limit_value = +req.query.limit;
+        const skip_value = +req.query.skip;
+       
+        const result = await Propostas.aggregate([
+            {
+                $project: {
+                    idProposicao: 1,
+                    ementa: 1,
+                    ano: 1,
+                    // quantidadeDeputados: { $size: '$deputados' },
+                    _id: 0,
+                    aux: {
+                        $filter: {
+                            input: "$deputados",
+                            as: "d",
+                            cond: {
+                                $ne: [
+                                    "$$d",
+                                    null
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $project: {
+                    quantidadeDeputados: { $size: '$aux' },
+                    _id: 0,
+                    idProposicao: 1,
+                    ementa: 1,
+                    ano: 1,
+                }
+            },
+            { $sort: {idProposicao: 1}},
+            { $skip: skip_value},
+            { $limit: limit_value},            
+        ]).allowDiskUse(true);
+
+        return res.status(200).json(result);
+    } catch (err) {
+        console.error(err);
+        next();
+    }
+}
+
 module.exports = {
     getPropostas,
+    propostas,
 };
