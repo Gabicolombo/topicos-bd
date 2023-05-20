@@ -8,6 +8,7 @@ const PropostasSchema = mongoose.Schema({
       required: true, 
     },
     nome: { type: 'string', required: true },
+    tipo: { type: 'string', required: true }
   }],
   ementa: { type: 'string'},
   ano: { type: Number },
