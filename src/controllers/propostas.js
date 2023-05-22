@@ -4,7 +4,7 @@ const axios = require('axios');
 
 const getPropostas = async (req, res, next) => {
     try {
-        let pagina = 5029;
+        let pagina = 1;
 
         let dados = ['']
         while (dados.length > 0) {
