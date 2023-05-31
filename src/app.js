@@ -11,10 +11,8 @@ dotenv.config({ path: path.resolve('./env/config.env')});
 const port = process.env.PORT;
 
 // configurando as rotas
-const routesDeputados = require('../src/routes/deputados');
-const routeProposicoes = require('../src/routes/proposicoes');
-const routePropostas = require('../src/routes/propostas');
-const routeDespesas = require('../src/routes/despesas');
+const routesUsuarios = require('../src/routes/user');
+
 
 // conectando
 const app = express();
@@ -22,10 +20,7 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyparser.json());
 
-app.use(routesDeputados);
-app.use(routeProposicoes);
-app.use(routePropostas);
-app.use(routeDespesas);
+app.use(routesUsuarios);
 
 db();
 
