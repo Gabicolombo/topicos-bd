@@ -1,5 +1,8 @@
 const User = require('../schemas/user');
+const Message = require('../schemas/messages');
 const bcryptjs = require('bcryptjs');
+const formidable = require('formidable');
+const fs = require('fs');
 
 const register = async(req, res, next) => {
   try{
@@ -60,10 +63,66 @@ const removeToken = async(req, res, next) => {
   }
 }
 
+const saveMessage = async(req, res, next) => {
+  try{
+    console.log(req.file);
+    console.log(req.body);
+    console.log(req.user);
+
+    // const form = formidable({ multiples: true });
+    // form.parse(req, (err, fields, files) => {
+    //     console.log('fields: ', fields);
+    //     console.log('files: ', files);
+    //     res.send({ success: true });
+    // });
+    const imageData = fs.readFileSync(req.file.path);
+    console.log(imageData);
+    const message = await Message({
+      usuario: req.user.usuario,
+      data: '04/06/2023',
+      tipo: req.body.tipo,
+      mensagem: {
+        imagem: imageData,
+        descricao: req.body.descricao,
+        tipoImagem: req.file.mimetype,
+        tamanho: req.file.size
+      }
+    });
+
+    await message.save();
+    return res.status(200).send(message);
+    
+
+  }catch(err){
+    console.error(err);
+    next();
+  }
+}
+
+const getImage = async(req, res, next) => {
+  try{
+    const content = await Message.findOne({});
+    const binaryData = content.mensagem.imagem;
+    
+    const base64Image = binaryData.toString('base64');
+
+    
+    const imgTag = `<img src="data:image/jpeg;base64,${base64Image}" alt="Imagem">`;
+
+    res.status(200).send(imgTag);
+
+  }catch(err){
+    console.error(err);
+    next();
+  }
+}
+
 
 
 module.exports = {
   register,
   login,
-  removeToken
+  removeToken,
+  saveMessage,
+  getImage
 }
