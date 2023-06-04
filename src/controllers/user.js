@@ -65,33 +65,35 @@ const removeToken = async(req, res, next) => {
 
 const saveMessage = async(req, res, next) => {
   try{
-    console.log(req.file);
-    console.log(req.body);
-    console.log(req.user);
-
-    // const form = formidable({ multiples: true });
-    // form.parse(req, (err, fields, files) => {
-    //     console.log('fields: ', fields);
-    //     console.log('files: ', files);
-    //     res.send({ success: true });
-    // });
-    const imageData = fs.readFileSync(req.file.path);
-    console.log(imageData);
-    const message = await Message({
-      usuario: req.user.usuario,
-      data: '04/06/2023',
-      tipo: req.body.tipo,
-      mensagem: {
-        imagem: imageData,
-        descricao: req.body.descricao,
-        tipoImagem: req.file.mimetype,
-        tamanho: req.file.size
-      }
-    });
+    
+    let message = '';
+    if(req.body.tipo === 'imagem') {
+      const imageData = fs.readFileSync(req.file.path);
+      
+      message = await Message({
+        usuario: req.user.usuario,
+        data: '04/06/2023',
+        tipo: req.body.tipo,
+        mensagem: {
+          imagem: imageData,
+          descricao: req.body.descricao,
+          tipoImagem: req.file.mimetype,
+          tamanho: req.file.size
+        }
+      });
+    }else if (req.body.tipo === 'texto'){
+      message = await Message({
+        usuario: req.user.usuario,
+        data: '04/06/2023',
+        tipo: req.body.tipo,
+        mensagem: {
+          texto: req.body.texto
+        }
+      });
+    }
 
     await message.save();
     return res.status(200).send(message);
-    
 
   }catch(err){
     console.error(err);

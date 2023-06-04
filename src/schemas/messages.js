@@ -12,7 +12,9 @@ const messageSchema = mongoose.Schema({
     required: true,
     validate: function (data) {
       if (this.tipo === 'texto') {
-        return typeof this.mensagem.texto === 'string';
+        return ({
+          texto: { type: String, required: true }
+        })
       } else if (this.tipo === 'imagem') {
         /*
           imagem, descricao, tipo de imagem, tamanho
