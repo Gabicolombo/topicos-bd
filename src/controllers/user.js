@@ -67,7 +67,16 @@ const saveMessage = async(req, res, next) => {
   try{
     
     let message = '';
-    if(req.body.tipo === 'imagem') {
+    if (req.body.tipo === 'texto'){
+      message = await Message({
+        usuario: req.user.usuario,
+        data: '04/06/2023',
+        tipo: req.body.tipo,
+        mensagem: {
+          texto: req.body.texto
+        }
+      });
+    }else if(req.body.tipo === 'imagem') {
       const imageData = fs.readFileSync(req.file.path);
       
       message = await Message({
@@ -79,15 +88,6 @@ const saveMessage = async(req, res, next) => {
           descricao: req.body.descricao,
           tipoImagem: req.file.mimetype,
           tamanho: req.file.size
-        }
-      });
-    }else if (req.body.tipo === 'texto'){
-      message = await Message({
-        usuario: req.user.usuario,
-        data: '04/06/2023',
-        tipo: req.body.tipo,
-        mensagem: {
-          texto: req.body.texto
         }
       });
     }
