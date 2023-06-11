@@ -105,6 +105,17 @@ const saveMessage = async(req, res, next) => {
 
         }
       });
+    }else {
+      message = await Message({
+        usuario: req.user.usuario,
+        data: '04/06/2023',
+        tipo: req.body.tipo,
+        mensagem: {
+          descricao: req.body.descricao,
+          opcoes: req.body.opcoes
+        }
+      });
+      
     }
 
     await message.save();

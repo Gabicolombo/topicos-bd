@@ -44,6 +44,13 @@ const messageSchema = mongoose.Schema({
           data de criação
           data de encerramento
         */
+          return ({
+            descricao: { type: String, required: true },
+            opcoes: [
+              { type: String,
+                opcao: String, 
+                id: Number, required: true, votos: Number }]
+          })
 
       }
 
