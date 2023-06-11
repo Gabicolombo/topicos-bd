@@ -77,8 +77,8 @@ const saveMessage = async(req, res, next) => {
         }
       });
     }else if(req.body.tipo === 'imagem') {
-      const imageData = fs.readFileSync(req.file.path);
-      
+    
+      const imageData = fs.readFileSync(req.files[0].path);
       message = await Message({
         usuario: req.user.usuario,
         data: '04/06/2023',
@@ -86,8 +86,23 @@ const saveMessage = async(req, res, next) => {
         mensagem: {
           imagem: imageData,
           descricao: req.body.descricao,
-          tipoImagem: req.file.mimetype,
-          tamanho: req.file.size
+          tipoImagem: req.files[0].mimetype,
+          tamanho: req.files[0].size
+        }
+      });
+    }
+    else if(req.body.tipo === 'video'){
+      const videoData = fs.readFileSync(req.files[0].path);
+    
+      message = await Message({
+        usuario: req.user.usuario,
+        data: '04/06/2023',
+        tipo: req.body.tipo,
+        mensagem: {
+          video: videoData,
+          descricao: req.body.descricao,
+          tipoVideo: req.files[0].mimetype,
+
         }
       });
     }
@@ -103,13 +118,32 @@ const saveMessage = async(req, res, next) => {
 
 const getImage = async(req, res, next) => {
   try{
-    const content = await Message.findOne({});
+    const content = await Message.findOne({tipo: 'imagem'});
     const binaryData = content.mensagem.imagem;
     
     const base64Image = binaryData.toString('base64');
 
     
     const imgTag = `<img src="data:image/jpeg;base64,${base64Image}" alt="Imagem">`;
+
+    res.status(200).send(imgTag);
+
+  }catch(err){
+    console.error(err);
+    next();
+  }
+}
+
+const getVideo = async(req, res, next) => {
+  try{
+    const content = await Message.findOne({tipo: 'video'});
+    const binaryData = content.mensagem.video;
+    
+    const base64Video = binaryData.toString('base64');
+
+    
+    const imgTag = `<video src="data:video/mp4;base64,${base64Video}" width="640" height="360" controls>
+  </video>`;
 
     res.status(200).send(imgTag);
 
@@ -126,5 +160,6 @@ module.exports = {
   login,
   removeToken,
   saveMessage,
-  getImage
+  getImage,
+  getVideo
 }
