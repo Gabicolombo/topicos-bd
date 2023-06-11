@@ -13,6 +13,7 @@ routes.post('/login', controller.login);
 routes.delete('/sair', auth, controller.removeToken);
 
 //upload.single('imagem')
-routes.post('/messages', auth, upload.single('imagem'), controller.saveMessage);
-routes.get('/messages', controller.getImage);
+routes.post('/messages', auth, upload.any(), controller.saveMessage);
+routes.get('/messages/images', controller.getImage);
+routes.get('/messages/videos', controller.getVideo);
 module.exports = routes;
