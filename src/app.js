@@ -87,26 +87,25 @@ server.listen(port, () => {
 wss.on("connection", (ws, req) => {
   console.log("New client connected!");
 
+  userBusiness.getMessages()
+    .then((messages) => {
+      ws.send(JSON.stringify(messages));
+    })
+    .catch((error) => {
+      console.error('Erro ao obter mensagens do banco de dados:', error);
+    });
+
   //recebimento da mensagem
   ws.on('message', (message) => {
-    console.log('Received: ' + JSON.parse(message));
+    message = JSON.parse(message.toString());
+    console.log('Received: ' + message);
 
     //salvando a mensagem
-    userBusiness.saveTextMessage(JSON.parse(message));
-
-    client.send(message)
-
-
-    //envio da mensagem de volta
-    //switch(data.tipo) {
-    //  case "texto":
-        //io.emit('message', data.mensagem.texto);
-    //    break;
-    //  case "imagem":
-        //io.emit('message', data.mensagem.descricao);
-    //    break;
-    //}
-
+    userBusiness.saveTextMessage(message);
+    console.log(message);
+    wss.clients.forEach(function each(client) {
+      if(client.readyState === WebSocket.OPEN) client.send(JSON.stringify([message]), { bynary: true});
+    })
   })
 
   ws.on('close', () => console.log('disconnected'));
