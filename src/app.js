@@ -60,6 +60,7 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
     credentials: true,
   },
+  maxHttpBufferSize: 1e8, 
 });
 
 io.on("connection", (socket) => {
