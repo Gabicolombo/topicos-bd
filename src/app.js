@@ -75,10 +75,10 @@ io.on("connection", (socket) => {
     });
 
   //recebimento da mensagem
-  io.on("message", (message) => {
+  socket.on("message", (message) => {
     console.log(message);
     userBusiness.saveTextMessage(message);
-
+    //socket.emit("history", message);
     io.emit("message", message);
   });
 });
