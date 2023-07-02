@@ -8,6 +8,7 @@ const http = require("http");
 const app = express();
 const cron = require("node-cron");
 const server = http.createServer(app);
+const { Binary } = require('mongodb');
 /*const { Server } = require("socket.io");
 const io = new Server(server, {
   cors: {
@@ -79,7 +80,16 @@ io.on("connection", (socket) => {
   socket.on("message", (message) => {
     console.log(message);
     userBusiness.saveTextMessage(message);
-    //socket.emit("history", message);
+    
+    if(message.tipo == "video")
+    {
+      const buffer = Buffer.from(message.mensagem.video, 'hex');
+
+      const binData = new Binary(buffer);
+
+      message.mensagem.video = binData;
+    }
+
     io.emit("message", message);
   });
 });
